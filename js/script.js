@@ -11,18 +11,19 @@ getDataBtn.addEventListener("click", function () {
 
   const [lat, lng] = selectedLocation.split(",");
 
-  getTodayData(lat, lng);
+  getSunData(lat, lng, "today");
+  getSunData(lat, lng, "tomorrow");
 });
 
-function getTodayData(lat, lng) {
-  const url = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lng}&date=today`;
+function getSunData(lat, lng, date) {
+  const url = `https://api.sunrisesunset.io/json?lat=${lat}&lng=${lng}&date=${date}`;
 
   fetch(url)
     .then(function (response) {
       return response.json();
     })
     .then(function (data) {
-      console.log(data);
+      console.log(date, data);
 
       if (data.status !== "OK") {
         alert("Something went wrong getting the sunrise and sunset data.");
@@ -31,13 +32,13 @@ function getTodayData(lat, lng) {
 
       const results = data.results;
 
-      document.getElementById("today-sunrise").textContent = results.sunrise;
-      document.getElementById("today-sunset").textContent = results.sunset;
-      document.getElementById("today-dawn").textContent = results.dawn;
-      document.getElementById("today-dusk").textContent = results.dusk;
-      document.getElementById("today-noon").textContent = results.solar_noon;
-      document.getElementById("today-length").textContent = results.day_length;
-      document.getElementById("today-timezone").textContent = results.timezone;
+      document.getElementById(`${date}-sunrise`).textContent = results.sunrise;
+      document.getElementById(`${date}-sunset`).textContent = results.sunset;
+      document.getElementById(`${date}-dawn`).textContent = results.dawn;
+      document.getElementById(`${date}-dusk`).textContent = results.dusk;
+      document.getElementById(`${date}-noon`).textContent = results.solar_noon;
+      document.getElementById(`${date}-length`).textContent = results.day_length;
+      document.getElementById(`${date}-timezone`).textContent = results.timezone;
     })
     .catch(function (error) {
       console.log("Error:", error);
