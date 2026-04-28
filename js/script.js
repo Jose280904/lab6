@@ -1,11 +1,14 @@
 const locationSelect = document.getElementById("locationSelect");
 const getDataBtn = document.getElementById("getDataBtn");
+const errorMessage = document.getElementById("errorMessage");
 
 getDataBtn.addEventListener("click", function () {
   const selectedLocation = locationSelect.value;
 
+  errorMessage.textContent = "";
+
   if (selectedLocation === "") {
-    alert("Please select a location first.");
+    errorMessage.textContent = "Please select a location first.";
     return;
   }
 
@@ -23,25 +26,23 @@ function getSunData(lat, lng, date) {
       return response.json();
     })
     .then(function (data) {
-      console.log(date, data);
 
       if (data.status !== "OK") {
-        alert("Something went wrong getting the sunrise and sunset data.");
+        errorMessage.textContent = "Error getting data. Try again.";
         return;
       }
 
-      const results = data.results;
+      const r = data.results;
 
-      document.getElementById(`${date}-sunrise`).textContent = results.sunrise;
-      document.getElementById(`${date}-sunset`).textContent = results.sunset;
-      document.getElementById(`${date}-dawn`).textContent = results.dawn;
-      document.getElementById(`${date}-dusk`).textContent = results.dusk;
-      document.getElementById(`${date}-noon`).textContent = results.solar_noon;
-      document.getElementById(`${date}-length`).textContent = results.day_length;
-      document.getElementById(`${date}-timezone`).textContent = results.timezone;
+      document.getElementById(`${date}-sunrise`).textContent = r.sunrise;
+      document.getElementById(`${date}-sunset`).textContent = r.sunset;
+      document.getElementById(`${date}-dawn`).textContent = r.dawn;
+      document.getElementById(`${date}-dusk`).textContent = r.dusk;
+      document.getElementById(`${date}-noon`).textContent = r.solar_noon;
+      document.getElementById(`${date}-length`).textContent = r.day_length;
+      document.getElementById(`${date}-timezone`).textContent = r.timezone;
     })
-    .catch(function (error) {
-      console.log("Error:", error);
-      alert("Could not connect to the sunrise and sunset API.");
+    .catch(function () {
+      errorMessage.textContent = "Could not connect to API.";
     });
 }
